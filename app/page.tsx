@@ -11,6 +11,7 @@ import {
   TabsTrigger,
 } from "@/src/shared/components/core/tabs";
 
+import MusicLayout from "@/src/modules/home/components/music-layout";
 import { PodcastEmptyPlaceholder } from "@/src/shared/components/core/podcast-empty-placeholder";
 import { playlists } from "@/src/shared/components/data/playlists";
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
@@ -40,12 +41,12 @@ export default function MusicPage() {
             className="hidden dark:block"
           />
         </div>
-        <div className="hidden md:block">
-          <div className="border-t">
-            <div className="bg-background">
-              <div className="grid lg:grid-cols-5">
+        <div className="hidden md:block h-full">
+          <div className="border-t h-full">
+            <div className="bg-background h-full">
+              <div className="grid lg:grid-cols-5 h-full">
                 <Sidebar playlists={playlists} className="hidden lg:block" />
-                <div className="col-span-3 lg:col-span-4 lg:border-l">
+                <div className="col-span-3 lg:col-span-4 lg:border-l h-full">
                   <div className="h-full px-4 py-6 lg:px-8">
                     <Tabs defaultValue="music" className="h-full space-y-6">
                       <div className="space-between flex items-center">
@@ -67,9 +68,9 @@ export default function MusicPage() {
                       </div>
                       <TabsContent
                         value="music"
-                        className="border-none p-0 outline-none"
+                        className="border-none p-0 outline-none h-full"
                       >
-
+                        <MusicLayout />
                       </TabsContent>
                       <TabsContent
                         value="podcasts"
