@@ -13,14 +13,16 @@ import {
 } from "@/src/shared/components/core/form";
 import { Icons } from "@/src/shared/components/core/icons";
 import { Input } from "@/src/shared/components/core/input";
+import { useToast } from "@/src/shared/components/core/use-toast";
+import AccountService from "@/src/shared/services/account-service";
+import { RegisterDto, RegisterError } from "@/src/shared/types/Account";
 import { cn } from "@/src/shared/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { useMutation } from "@tanstack/react-query";
-import AccountService from "@/src/shared/services/account-service";
-import { RegisterDto } from "@/src/shared/types/Account";
-import { useRouter } from 'next/navigation';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -42,14 +44,26 @@ const registFormSchema = z.object({
 });
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
-  const router = useRouter()
+  const router = useRouter();
+  const { toast } = useToast();
   const { mutate, isLoading } = useMutation({
     mutationFn: (dto: RegisterDto) => AccountService.register(dto),
     onSuccess(data, variables, context) {
-      router.push('/')
+      // Note: I'm using login on success due to lack of access token in register response
+      toast({
+        title: `Now login using your credentials`,
+        description: `use username and password to login`,
+      });
+      router.push("/auth/login");
     },
-    onError(error, variables, context) {
-        
+    onError(error: AxiosError<RegisterError>, variables, context) {
+      const errors = error?.response?.data.result;
+      errors?.forEach((item) => {
+        toast({
+          title: `Please edit ${item.field} field`,
+          description: item.message,
+        });
+      });
     },
   });
 
@@ -60,7 +74,9 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  async function onSubmit(data: RegisterFormValues) {}
+  async function onSubmit(data: RegisterFormValues) {
+    mutate(data);
+  }
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>

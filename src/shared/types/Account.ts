@@ -12,6 +12,14 @@ export interface RegisterResult {
   id: number;
 }
 
+export interface RegisterError {
+  ok: boolean;
+  result: {
+    field: string;
+    message: string;
+  }[];
+}
+
 export interface LoginDto {
   username: string;
   password: string;
