@@ -1,4 +1,4 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { ExitIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -17,6 +17,7 @@ import { playlists } from "@/src/shared/components/data/playlists";
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
 import { useQuery } from "@tanstack/react-query";
 import SongService from "@/src/shared/services/song-service";
+import LogoutButton from "./components/log-out-button";
 
 export const metadata: Metadata = {
   title: "Melody App - Home",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   // const { data } = useQuery({queryKey: ['songs'], queryFn: SongService.getAllSongs})
+
 
 
   return (
@@ -65,10 +67,7 @@ export default function HomePage() {
                           </TabsTrigger>
                         </TabsList>
                         <div className="ml-auto mr-4">
-                          <Button>
-                            <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add music
-                          </Button>
+                         <LogoutButton />
                         </div>
                       </div>
                       <TabsContent

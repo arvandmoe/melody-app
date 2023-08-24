@@ -1,62 +1,117 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/src/shared/utils"
-import { Button } from "@/src/shared/components/core/button"
-import { Icons } from "@/src/shared/components/core/icons"
-import { Input } from "@/src/shared/components/core/input"
-import { Label } from "@/src/shared/components/core/label"
+import { Button } from "@/src/shared/components/core/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/src/shared/components/core/form";
+import { Icons } from "@/src/shared/components/core/icons";
+import { Input } from "@/src/shared/components/core/input";
+import { useToast } from "@/src/shared/components/core/use-toast";
+import AccountService from "@/src/shared/services/account-service";
+import { LoginDto, RegisterError } from "@/src/shared/types/Account";
+import { cn } from "@/src/shared/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import z from "zod";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+type LoginFormValues = z.infer<typeof loginFormSchema>;
+
+const loginFormSchema = z.object({
+  username: z
+    .string({
+      required_error: "Username is required",
+    })
+    .min(3, {
+      message: "Username must be at least 3 characters.",
+    }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(6, { message: "At least 6 characters" }),
+});
+
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const router = useRouter();
+  const { toast } = useToast();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (dto: LoginDto) => AccountService.login(dto),
+    onSuccess(data, variables, context) {
+      Cookies.set("token", data?.data?.result.access_token);
+      router.push("/");
+    },
+    onError(error: AxiosError<RegisterError>, variables, context) {
+      const errors = error?.response?.data.result;
+      errors?.forEach((item) => {
+        toast({
+          title: `Please edit ${item.field} field`,
+          description: item.message,
+        });
+      });
+    },
+  });
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+  async function onSubmit(data: LoginFormValues) {
+    mutate(data);
   }
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-2">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
-            <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
-            />
-            <Input
-              id="password"
-              placeholder="password"
-              type="password"
-              autoCapitalize="none"
-              autoComplete="password"
-              autoCorrect="off"
-              disabled={isLoading}
-            />
-          </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="Username" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            Login
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button disabled={isLoading} className="w-full">
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Signup"
+            )}
           </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
     </div>
-  )
+  );
 }

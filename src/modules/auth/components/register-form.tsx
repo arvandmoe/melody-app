@@ -26,18 +26,22 @@ import z from "zod";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-type RegisterFormValues = z.infer<typeof registFormSchema>;
+type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-const registFormSchema = z.object({
+const registerFormSchema = z.object({
   first_name: z.string({
     required_error: "FirstName is required.",
   }),
   last_name: z.string({
     required_error: "LastName is required.",
   }),
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  username: z
+    .string({
+      required_error: "Username is required",
+    })
+    .min(3, {
+      message: "Username must be at least 3 characters.",
+    }),
   password: z
     .string({ required_error: "Password is required" })
     .min(6, { message: "At least 6 characters" }),
@@ -67,8 +71,8 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  const form = useForm<z.infer<typeof registFormSchema>>({
-    resolver: zodResolver(registFormSchema),
+  const form = useForm<z.infer<typeof registerFormSchema>>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: {
       username: "",
     },
