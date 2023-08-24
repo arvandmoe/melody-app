@@ -7,7 +7,7 @@ import {
 import { AlbumArtwork } from "@/src/shared/components/core/album-artwork";
 import { listenNowAlbums } from "@/src/shared/components/data/albums";
 
-const MusicLayout = () => {
+const SongLayout = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -40,4 +40,4 @@ const MusicLayout = () => {
   );
 };
 
-export default MusicLayout;
+export default SongLayout;
