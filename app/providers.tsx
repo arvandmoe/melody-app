@@ -1,10 +1,10 @@
 "use client";
 
+import { Toaster } from "@/src/shared/components/core/toaster";
 import queryClient from "@/src/shared/network/query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode } from "react";
-import { Toaster } from "react-hot-toast";
 
 interface Props {
   children: ReactNode;
