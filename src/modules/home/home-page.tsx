@@ -1,8 +1,6 @@
-import { ExitIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Metadata } from "next";
 import Image from "next/image";
 
-import { Button } from "@/src/shared/components/core/button";
 import { Separator } from "@/src/shared/components/core/separator";
 import {
   Tabs,
@@ -15,8 +13,6 @@ import SongLayout from "@/src/modules/home/components/song-layout";
 import { PodcastEmptyPlaceholder } from "@/src/shared/components/core/podcast-empty-placeholder";
 import { playlists } from "@/src/shared/components/data/playlists";
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
-import { useQuery } from "@tanstack/react-query";
-import SongService from "@/src/shared/services/song-service";
 import LogoutButton from "./components/log-out-button";
 
 export const metadata: Metadata = {
@@ -25,9 +21,6 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  // const { data } = useQuery({queryKey: ['songs'], queryFn: SongService.getAllSongs})
-
-
 
   return (
     <main>
