@@ -3,7 +3,7 @@
 import { Button } from "@/src/shared/components/core/button";
 import { Icons } from "@/src/shared/components/core/icons";
 import PlaylistService from "@/src/shared/services/playlist-service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -20,6 +20,7 @@ const PlaylistPage = (props: PlaylistPageProps) => {
   const { id } = props.params;
   const { toast } = useToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey: ["playlists", id],
     queryFn: () => PlaylistService.getPlaylist(id),
@@ -30,6 +31,7 @@ const PlaylistPage = (props: PlaylistPageProps) => {
   const { mutate, isLoading: removeLoading } = useMutation({
     mutationFn: () => PlaylistService.deletePlaylist(id),
     onSuccess() {
+      queryClient.refetchQueries(["playlists"]);
       toast({
         description: `Playlist deleted!`,
       });

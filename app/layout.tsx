@@ -1,9 +1,8 @@
-import "./globals.css";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "./globals.css";
 import Providers from "./providers";
-import clsx from "clsx";
-import { Sidebar } from "@/src/shared/components/layout/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,18 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={clsx(inter.className)}>
-        <Providers>
-          <div className="hidden md:block h-full">
-            <div className="border-t h-full">
-              <div className="bg-background h-full">
-                <div className="grid lg:grid-cols-5 h-full">
-                  <Sidebar className="hidden lg:block" />
-                  {children}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

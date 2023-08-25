@@ -6,10 +6,12 @@ import { useToast } from "@/src/shared/components/core/use-toast";
 import PlaylistService from "@/src/shared/services/playlist-service";
 import { AddToPlaylistDto } from "@/src/shared/types/Playlist";
 import { Song } from "@/src/shared/types/Song";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { SelectPlaylistDialog } from "../../playlist/components/select-playlist-dialog";
+import { SongSkeleton } from "./song-skeleton";
 
 interface SongViewProps {
   songs: Song[] | undefined;
@@ -19,16 +21,19 @@ interface SongViewProps {
 export default function SongView(props: SongViewProps) {
   const { songs, isLoading } = props;
   const { toast } = useToast();
-  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const [selectedSongId, setSelectedSongId] = useState<number | null>(null);
+  const [open, setOpen] = useState(false);
 
   const { mutate, isLoading: addLoading } = useMutation({
     mutationFn: (dto: AddToPlaylistDto) =>
       PlaylistService.addSongToPlaylist(dto),
     onSuccess() {
+      queryClient.refetchQueries(["playlists"]);
       toast({
         description: `Song added to playlist!`,
       });
-      router.push("/");
     },
     onError() {
       toast({
@@ -37,13 +42,23 @@ export default function SongView(props: SongViewProps) {
     },
   });
 
-  async function onAddClick() {
+  async function onAddClick(songId: number) {
+    setSelectedSongId(songId);
+    setOpen(true);
+  }
+
+  async function onSelectPlaylist(playlistId: number) {
+    if (selectedSongId && playlistId) {
+      mutate({
+        songId: selectedSongId,
+        playlistId: playlistId,
+      });
+    }
   }
 
   return (
     <>
-      {isLoading && <SkeletonLoadingComponent />}
-
+      {isLoading && <SongSkeleton />}
       {songs && !isLoading && (
         <ul role="list" className="w-full h-full divide-y divide-gray-100">
           {songs?.map((song) => (
@@ -83,7 +98,7 @@ export default function SongView(props: SongViewProps) {
                 </div>
               </div>
               <div className="flex">
-                <Button variant="ghost" onClick={onAddClick}>
+                <Button variant="ghost" onClick={() => onAddClick(song?.id)}>
                   <Icons.playlist className="mr-2 h-4 w-4" />
                 </Button>
                 <div className="flex flex-none items-center gap-x-4">
@@ -100,36 +115,11 @@ export default function SongView(props: SongViewProps) {
           ))}
         </ul>
       )}
+      <SelectPlaylistDialog
+        open={open}
+        setOpen={setOpen}
+        onSelectPlaylist={onSelectPlaylist}
+      />
     </>
   );
 }
-
-const SkeletonLoadingComponent = () => {
-  const skeletonItems = Array.from({ length: 10 }, (_, index) => (
-    <li
-      key={index}
-      className="flex items-center justify-between gap-x-6 py-5 animate-pulse"
-    >
-      <div className="min-w-0 w-full">
-        <div className="flex items-start gap-x-3">
-          <div className="h-5 bg-gray-200 w-3/4 rounded-sm"></div>
-        </div>
-        <div className="flex items-center gap-x-2 text-xs leading-5 text-gray-300 mt-2">
-          <div className="h-4 bg-gray-200 w-1/4 rounded-sm"></div>
-          <div className="h-4 bg-gray-200 w-1/8 rounded-sm"></div>
-          <div className="h-4 bg-gray-200 w-1/4 rounded-sm"></div>
-        </div>
-      </div>
-      <div className="flex flex-none items-center gap-x-4">
-        <div className="h-8 w-8 bg-gray-200 rounded-sm"></div>
-        <div className="h-8 w-24 bg-gray-200 rounded-sm"></div>
-      </div>
-    </li>
-  ));
-
-  return (
-    <ul role="list" className="w-full h-full divide-y divide-gray-100">
-      {skeletonItems}
-    </ul>
-  );
-};
