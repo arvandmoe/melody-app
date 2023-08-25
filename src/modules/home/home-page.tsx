@@ -53,6 +53,7 @@ export default function HomePage() {
             className="border-none p-0 outline-none h-full"
           >
             <Input
+              name="search"
               type="text"
               placeholder="Search"
               value={filter}

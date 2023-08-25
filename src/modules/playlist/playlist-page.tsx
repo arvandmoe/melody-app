@@ -12,7 +12,7 @@ import { Trash2Icon } from "lucide-react";
 import { useToast } from "@/src/shared/components/core/use-toast";
 import { useRouter } from "next/navigation";
 
-interface PlaylistPageProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PlaylistPageProps {
   params: { id: number };
 }
 

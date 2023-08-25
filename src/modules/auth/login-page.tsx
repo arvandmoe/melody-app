@@ -7,7 +7,7 @@ import { LoginForm } from "./components/login-form";
 import authImage from "@/src/shared/assets/auth.jpg";
 
 export const metadata: Metadata = {
-  title: "Melody App- Login",
+  title: "Melody App - Login",
   description: "Login to your account",
 };
 

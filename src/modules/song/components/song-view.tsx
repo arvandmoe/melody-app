@@ -64,7 +64,7 @@ export default function SongView(props: SongViewProps) {
           {songs?.map((song) => (
             <li
               key={song.id}
-              className="flex items-center justify-between gap-x-6 py-5"
+              className="song-item flex items-center justify-between gap-x-6 py-5"
             >
               <div className="min-w-0">
                 <div className="flex items-start gap-x-3">

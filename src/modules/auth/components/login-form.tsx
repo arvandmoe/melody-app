@@ -63,7 +63,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       const errors = error?.response?.data.result;
       errors?.forEach((item) => {
         toast({
-          title: `Please edit ${item.field} field`,
+          title: `Please check your credentials`,
           description: item.message,
         });
       });
@@ -104,7 +104,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
               </FormItem>
             )}
           />
-          <Button disabled={isLoading} className="w-full">
+          <Button id="loginBtn" disabled={isLoading} className="w-full">
             {isLoading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             ) : (
