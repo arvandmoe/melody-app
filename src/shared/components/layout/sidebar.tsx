@@ -1,13 +1,20 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import PlaylistService from "../../services/playlist-service";
 import { cn } from "../../utils";
 import { Button } from "../core/button";
-import { Playlist } from "../data/playlists";
 import { ScrollArea } from "./scroll-area";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[];
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ className, playlists }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
+  const { data } = useQuery({
+    queryKey: ["playlists"],
+    queryFn: () => PlaylistService.getAllPlaylists(),
+  });
+  const playlists = data?.data?.result.items;
+
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">
@@ -39,7 +46,7 @@ export function Sidebar({ className, playlists }: SidebarProps) {
                     <path d="M16 6H3" />
                     <path d="M12 18H3" />
                   </svg>
-                  {playlist}
+                  {playlist.title}
                 </Button>
               ))}
             </div>

@@ -11,7 +11,6 @@ import {
 
 import SongLayout from "@/src/modules/home/components/song-layout";
 import { PodcastEmptyPlaceholder } from "@/src/shared/components/core/podcast-empty-placeholder";
-import { playlists } from "@/src/shared/components/data/playlists";
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
 import LogoutButton from "./components/log-out-button";
 
@@ -45,7 +44,7 @@ export default function HomePage() {
           <div className="border-t h-full">
             <div className="bg-background h-full">
               <div className="grid lg:grid-cols-5 h-full">
-                <Sidebar playlists={playlists} className="hidden lg:block" />
+                <Sidebar className="hidden lg:block" />
                 <div className="col-span-3 lg:col-span-4 lg:border-l h-full">
                   <div className="h-full px-4 py-6 lg:px-8">
                     <Tabs defaultValue="music" className="h-full space-y-6">
