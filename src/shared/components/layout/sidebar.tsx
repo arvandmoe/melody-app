@@ -1,6 +1,6 @@
 "use client";
 
-import { PlaylistDialog } from "@/src/modules/playlist/playlist-dialog";
+import { PlaylistDialog } from "@/src/modules/playlist/components/playlist-dialog";
 import { useQuery } from "@tanstack/react-query";
 import PlaylistService from "../../services/playlist-service";
 import { cn } from "../../utils";

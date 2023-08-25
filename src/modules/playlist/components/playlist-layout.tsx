@@ -33,10 +33,8 @@ const PlaylistLayout = () => {
             <PlaylistArtwork
               key={playlist.title}
               playlist={playlist}
-              className="w-[250px]"
-              aspectRatio="portrait"
               width={250}
-              height={330}
+              height={250}
             />
           ))}
       </div>
