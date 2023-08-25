@@ -9,10 +9,10 @@ import {
   TabsTrigger,
 } from "@/src/shared/components/core/tabs";
 
-import SongLayout from "@/src/modules/home/components/song-layout";
-import { PodcastEmptyPlaceholder } from "@/src/shared/components/core/podcast-empty-placeholder";
+import SongLayout from "@/src/modules/song/components/song-layout";
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
 import LogoutButton from "./components/log-out-button";
+import PlaylistLayout from "../playlist/playlist-layout";
 
 export const metadata: Metadata = {
   title: "Melody App - Home",
@@ -33,12 +33,9 @@ export default function HomePage() {
                     <div className="space-between flex items-center">
                       <TabsList>
                         <TabsTrigger value="music" className="relative">
-                          Music
+                          Musics
                         </TabsTrigger>
-                        <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
-                        <TabsTrigger value="live" disabled>
-                          Live
-                        </TabsTrigger>
+                        <TabsTrigger value="playlists">Playlists</TabsTrigger>
                       </TabsList>
                       <div className="ml-auto">
                         <LogoutButton />
@@ -51,21 +48,11 @@ export default function HomePage() {
                       <SongLayout />
                     </TabsContent>
                     <TabsContent
-                      value="podcasts"
+                      value="playlists"
                       className="h-full flex-col border-none p-0 data-[state=active]:flex"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-semibold tracking-tight">
-                            New Episodes
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            Your favorite podcasts. Updated daily.
-                          </p>
-                        </div>
-                      </div>
+                     <PlaylistLayout />
                       <Separator className="my-4" />
-                      <PodcastEmptyPlaceholder />
                     </TabsContent>
                   </Tabs>
                 </div>

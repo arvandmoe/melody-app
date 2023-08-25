@@ -45,6 +45,14 @@ const loginFormSchema = z.object({
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
+
   const { mutate, isLoading } = useMutation({
     mutationFn: (dto: LoginDto) => AccountService.login(dto),
     onSuccess(data, variables, context) {
@@ -59,13 +67,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           description: item.message,
         });
       });
-    },
-  });
-
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      username: "",
     },
   });
 

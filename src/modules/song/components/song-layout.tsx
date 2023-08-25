@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/src/shared/components/core/button";
+import { Icons } from "@/src/shared/components/core/icons";
 import SongService from "@/src/shared/services/song-service";
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,13 +12,11 @@ export default function SongLayout() {
     queryKey: ["songs"],
     queryFn: () => SongService.getAllSongs(),
   });
-  const songs = data?.data?.result.items;
+  const songs = data?.data?.result?.items;
 
   return (
     <>
-      {isLoading && (
-        <SkeletonLoadingComponent />
-      )}
+      {isLoading && <SkeletonLoadingComponent />}
 
       {songs && !isLoading && (
         <ul role="list" className="w-full h-full divide-y divide-gray-100">
@@ -56,14 +56,19 @@ export default function SongLayout() {
                   <p className="truncate">Created by {song.artist_name}</p>
                 </div>
               </div>
-              <div className="flex flex-none items-center gap-x-4">
-                <a
-                  href={`${song.file}.${song.format}`}
-                  target="_blank"
-                  className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
-                >
-                  Download<span className="sr-only">, {song.title}</span>
-                </a>
+              <div className="flex">
+                <Button variant="ghost">
+                  <Icons.playlist className="mr-2 h-4 w-4" />
+                </Button>
+                <div className="flex flex-none items-center gap-x-4">
+                  <a
+                    href={`${song.file}.${song.format}`}
+                    target="_blank"
+                    className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
+                  >
+                    Download<span className="sr-only">, {song.title}</span>
+                  </a>
+                </div>
               </div>
             </li>
           ))}
@@ -83,13 +88,14 @@ const SkeletonLoadingComponent = () => {
         <div className="flex items-start gap-x-3">
           <div className="h-5 bg-gray-200 w-3/4 rounded-sm"></div>
         </div>
-        <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-300">
+        <div className="flex items-center gap-x-2 text-xs leading-5 text-gray-300 mt-2">
           <div className="h-4 bg-gray-200 w-1/4 rounded-sm"></div>
           <div className="h-4 bg-gray-200 w-1/8 rounded-sm"></div>
           <div className="h-4 bg-gray-200 w-1/4 rounded-sm"></div>
         </div>
       </div>
       <div className="flex flex-none items-center gap-x-4">
+        <div className="h-8 w-8 bg-gray-200 rounded-sm"></div>
         <div className="h-8 w-24 bg-gray-200 rounded-sm"></div>
       </div>
     </li>
@@ -101,4 +107,3 @@ const SkeletonLoadingComponent = () => {
     </ul>
   );
 };
-

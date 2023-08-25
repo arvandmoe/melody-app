@@ -1,58 +1,82 @@
 "use client";
 
+import { PlaylistDialog } from "@/src/modules/playlist/playlist-dialog";
 import { useQuery } from "@tanstack/react-query";
 import PlaylistService from "../../services/playlist-service";
 import { cn } from "../../utils";
 import { Button } from "../core/button";
+import { Icons } from "../core/icons";
 import { ScrollArea } from "./scroll-area";
+import Image from "next/image";
+import Link from "next/link";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className }: SidebarProps) {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["playlists"],
     queryFn: () => PlaylistService.getAllPlaylists(),
   });
-  const playlists = data?.data?.result.items;
+  const playlists = data?.data?.result?.items;
 
   return (
-    <div className={cn("pb-12", className)}>
-      <div className="space-y-4 py-4">
+    <div className={cn("pb-12 h-full", className)}>
+      <div className="space-y-4 py-4 px-2">
         <div className="py-2">
-          <h2 className="relative px-7 text-lg font-semibold tracking-tight">
-            Playlists
-          </h2>
-          <ScrollArea className="h-[300px] px-1">
-            <div className="space-y-1 p-2">
-              {playlists?.map((playlist, i) => (
-                <Button
-                  key={`${playlist}-${i}`}
-                  variant="ghost"
-                  className="w-full justify-start font-normal"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2 h-4 w-4"
+          <div className="flex w-full items-center justify-between">
+            <h2 className="relative px-7 text-lg font-semibold tracking-tight">
+              Playlists
+            </h2>
+            <PlaylistDialog />
+          </div>
+          <ScrollArea className="h-full px-1">
+            {isLoading && <PlaylistSkeleton />}
+            {playlists && !isLoading && (
+              <div className="space-y-2 p-2">
+                {playlists?.map((playlist, i) => (
+                  <Link
+                    href={`/playlist/${playlist?.id}`}
+                    key={`${playlist}-${i}`}
+                    className="flex items-center w-full justify-start font-normal space-x-2"
                   >
-                    <path d="M21 15V6" />
-                    <path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-                    <path d="M12 12H3" />
-                    <path d="M16 6H3" />
-                    <path d="M12 18H3" />
-                  </svg>
-                  {playlist.title}
-                </Button>
-              ))}
-            </div>
+                    <Image
+                      alt={playlist?.title}
+                      width={64}
+                      height={64}
+                      src={playlist?.cover}
+                      className="rounded-sm"
+                    />
+                    <div className="flex flex-col">
+                      <span> {playlist?.title}</span>
+                      <span className="text-xs text-gray-400">
+                        {" "}
+                        {`${playlist?.songs.length} songs`}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </ScrollArea>
         </div>
       </div>
     </div>
   );
 }
+
+const PlaylistSkeleton = () => {
+  const skeletonItems = Array.from({ length: 10 }, (_, index) => (
+    <div
+      key={index}
+      className="flex items-center w-full justify-start font-normal space-x-2 py-2 animate-pulse"
+    >
+      <div className="h-16 w-16 bg-gray-200 rounded-sm"></div>
+      <div className="flex flex-col space-y-2">
+        <div className="h-4 bg-gray-200 w-40 rounded-md"></div>
+        <div className="h-3 bg-gray-200 w-28 rounded-md"></div>
+      </div>
+    </div>
+  ));
+
+  return <div className="space-y-2 p-2">{skeletonItems}</div>;
+};

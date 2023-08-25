@@ -6,8 +6,16 @@ const getAllPlaylists = () => {
   return client.get<Response<PlaylistResult>>(`playlist`);
 };
 
-const addPlaylist = (id: number, dto: PlaylistDto) => {
-  return client.post<Response<Playlist>>(`playlist/${id}`, dto);
+const getPlaylist = (id: number) => {
+  return client.get<Response<Playlist>>(`playlist/${id}`);
+};
+
+const addPlaylist = (dto: FormData) => {
+  return client.post<Response<Playlist>>(`playlist`, dto, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 const updatePlaylist = (id: number, dto: PlaylistDto) => {
@@ -18,31 +26,32 @@ const deletePlaylist = (id: number) => {
   return client.delete<Response<Playlist>>(`playlist/${id}`);
 };
 
-const addSongToPlaylist = (
-  songId: number,
-  playlistId: number,
-) => {
-  return client.post<Response<PlaylistResult>>(`/playlist/add-song/${playlistId}`, {
-    song_id: songId,
-  });
+const addSongToPlaylist = (songId: number, playlistId: number) => {
+  return client.post<Response<PlaylistResult>>(
+    `/playlist/add-song/${playlistId}`,
+    {
+      song_id: songId,
+    }
+  );
 };
 
-const removeSongFromPlaylist = (
-  songId: number,
-  playlistId: number,
-) => {
-  return client.post<Response<PlaylistResult>>(`/playlist/add-song/${playlistId}`, {
-    song_id: songId,
-  });
+const removeSongFromPlaylist = (songId: number, playlistId: number) => {
+  return client.post<Response<PlaylistResult>>(
+    `/playlist/add-song/${playlistId}`,
+    {
+      song_id: songId,
+    }
+  );
 };
 
 const PlaylistService = {
   getAllPlaylists,
+  getPlaylist,
   addPlaylist,
   updatePlaylist,
   deletePlaylist,
   addSongToPlaylist,
-  removeSongFromPlaylist
+  removeSongFromPlaylist,
 };
 
 export default PlaylistService;

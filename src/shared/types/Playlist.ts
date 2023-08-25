@@ -2,7 +2,7 @@ import { Song } from "./Song";
 
 export interface PlaylistDto {
   title: string;
-  file: any;
+  file?: any;
 }
 
 export interface PlaylistResult {
