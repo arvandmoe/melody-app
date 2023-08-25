@@ -132,7 +132,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
               <FormItem>
                 <FormLabel className="sr-only">Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} />
+                  <Input type="password" placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

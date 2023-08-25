@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { getToken } from '@/src/shared/utils';
+import axios from "axios";
+import { getToken } from "@/src/shared/utils";
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BASEURL}/`,
@@ -23,14 +23,18 @@ apiClient.interceptors.request.use(
 
 // Response interceptor for API calls
 
-apiClient.interceptors.response.use((response) => {
-  return response
-}, async function (error) {
-  const originalRequest = error.config;
-  if (error.response.status === 401) {
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error.config;
+    if (error.response.status === 401) {
+      document.location.href = "/auth/login";
+      return Promise.reject(error);
+    }
     return Promise.reject(error);
   }
-  return Promise.reject(error);
-});
+);
 
 export default apiClient;
