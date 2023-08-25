@@ -2,17 +2,43 @@
 
 import { Button } from "@/src/shared/components/core/button";
 import { Icons } from "@/src/shared/components/core/icons";
-import SongService from "@/src/shared/services/song-service";
-import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/src/shared/components/core/use-toast";
+import PlaylistService from "@/src/shared/services/playlist-service";
+import { AddToPlaylistDto } from "@/src/shared/types/Playlist";
+import { Song } from "@/src/shared/types/Song";
+import { useMutation } from "@tanstack/react-query";
 
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
-export default function SongLayout() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["songs"],
-    queryFn: () => SongService.getAllSongs(),
+interface SongViewProps {
+  songs: Song[] | undefined;
+  isLoading: boolean;
+}
+
+export default function SongView(props: SongViewProps) {
+  const { songs, isLoading } = props;
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const { mutate, isLoading: addLoading } = useMutation({
+    mutationFn: (dto: AddToPlaylistDto) =>
+      PlaylistService.addSongToPlaylist(dto),
+    onSuccess() {
+      toast({
+        description: `Song added to playlist!`,
+      });
+      router.push("/");
+    },
+    onError() {
+      toast({
+        description: `Error`,
+      });
+    },
   });
-  const songs = data?.data?.result?.items;
+
+  async function onAddClick() {
+  }
 
   return (
     <>
@@ -57,7 +83,7 @@ export default function SongLayout() {
                 </div>
               </div>
               <div className="flex">
-                <Button variant="ghost">
+                <Button variant="ghost" onClick={onAddClick}>
                   <Icons.playlist className="mr-2 h-4 w-4" />
                 </Button>
                 <div className="flex flex-none items-center gap-x-4">

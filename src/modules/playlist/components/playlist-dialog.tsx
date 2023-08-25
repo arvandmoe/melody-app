@@ -17,13 +17,17 @@ import { useState } from "react";
 export function PlaylistDialog() {
   const [open, setOpen] = useState(false);
 
+  const openDialog = () => {
+    setOpen(true)
+  }
+
   const closeDialog = () => {
     setOpen(false)
   }
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">
+        <Button variant="destructive" onClick={openDialog}>
           <PlusIcon className="w-4 h-4" />
         </Button>
       </DialogTrigger>

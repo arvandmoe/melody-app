@@ -135,10 +135,9 @@ export function PlaylistForm({ className, ...props }: PlaylistFormProps) {
               {isLoading ? (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Login"
+                "Save"
               )}
             </Button>
-            <Button>Save</Button>
           </DialogFooter>
         </form>
       </Form>

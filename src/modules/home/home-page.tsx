@@ -1,5 +1,4 @@
-import { Metadata } from "next";
-import Image from "next/image";
+"use client";
 
 import { Separator } from "@/src/shared/components/core/separator";
 import {
@@ -8,11 +7,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/src/shared/components/core/tabs";
+import { Metadata } from "next";
 
-import SongLayout from "@/src/modules/song/components/song-layout";
-import { Sidebar } from "@/src/shared/components/layout/sidebar";
+import SongView from "@/src/modules/song/components/song-view";
+import SongService from "@/src/shared/services/song-service";
+import { useQuery } from "@tanstack/react-query";
+import PlaylistView from "../playlist/components/playlist-view";
 import LogoutButton from "./components/log-out-button";
-import PlaylistLayout from "../playlist/components/playlist-layout";
 
 export const metadata: Metadata = {
   title: "Melody App - Home",
@@ -20,6 +21,12 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["songs"],
+    queryFn: () => SongService.getAllSongs(),
+  });
+  const songs = data?.data?.result?.items;
+
   return (
     <>
       <div className="col-span-3 lg:col-span-4 lg:border-l h-full">
@@ -27,7 +34,7 @@ export default function HomePage() {
           <Tabs defaultValue="music" className="h-full space-y-6">
             <div className="space-between flex items-center">
               <TabsList>
-                <TabsTrigger value="music" className="relative">
+                <TabsTrigger value="music" className="relative" >
                   Musics
                 </TabsTrigger>
                 <TabsTrigger value="playlists">Playlists</TabsTrigger>
@@ -40,13 +47,13 @@ export default function HomePage() {
               value="music"
               className="border-none p-0 outline-none h-full"
             >
-              <SongLayout />
+              <SongView songs={songs} isLoading={isLoading} />
             </TabsContent>
             <TabsContent
               value="playlists"
               className="h-full flex-col border-none p-0 data-[state=active]:flex"
             >
-              <PlaylistLayout />
+              <PlaylistView />
               <Separator className="my-4" />
             </TabsContent>
           </Tabs>

@@ -5,6 +5,11 @@ export interface PlaylistDto {
   file?: any;
 }
 
+export interface AddToPlaylistDto {
+  songId: number;
+  playlistId: number;
+}
+
 export interface PlaylistResult {
   items: Playlist[];
 }

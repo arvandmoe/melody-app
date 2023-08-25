@@ -1,5 +1,5 @@
 import client from "@/src/shared/network/axios-client";
-import { Playlist, PlaylistDto, PlaylistResult } from "../types/Playlist";
+import { AddToPlaylistDto, Playlist, PlaylistDto, PlaylistResult } from "../types/Playlist";
 import { Response } from "../types/Response";
 
 const getAllPlaylists = () => {
@@ -26,11 +26,11 @@ const deletePlaylist = (id: number) => {
   return client.delete<Response<Playlist>>(`playlist/${id}`);
 };
 
-const addSongToPlaylist = (songId: number, playlistId: number) => {
+const addSongToPlaylist = (dto: AddToPlaylistDto) => {
   return client.post<Response<PlaylistResult>>(
-    `/playlist/add-song/${playlistId}`,
+    `/playlist/add-song/${dto?.playlistId}`,
     {
-      song_id: songId,
+      song_id: dto?.songId,
     }
   );
 };
