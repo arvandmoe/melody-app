@@ -3,11 +3,13 @@ import { SongParams, SongResult } from "@/src/shared/types/Song";
 import { Response } from "../types/Response";
 
 const getAllSongs = (params?: SongParams) => {
-  return client.get<Response<SongResult>>(`song`, {
+  let url = `song`
+  if(params?.filter !== '') url += `?filter[title][like]=${params?.filter}`
+
+  return client.get<Response<SongResult>>(url, {
     params: {
-      "filter[title][like]": params?.filter,
-      "per-page": params?.perPage,
-      page: params?.page,
+      ...(params?.perPage !== undefined ? { "per-page": params?.perPage } : {}),
+      ...(params?.page !== undefined ? { page: params?.page } : {}),
     },
   });
 };

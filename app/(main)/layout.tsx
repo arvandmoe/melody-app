@@ -1,5 +1,4 @@
 import { Sidebar } from "@/src/shared/components/layout/sidebar";
-import "./globals.css";
 
 export default function MainLayout({
   children,

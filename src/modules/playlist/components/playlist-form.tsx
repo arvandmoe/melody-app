@@ -66,13 +66,9 @@ export function PlaylistForm({ className, ...props }: PlaylistFormProps) {
       });
       closeDialog();
     },
-    onError(error: AxiosError<RegisterError>, variables, context) {
-      const errors = error?.response?.data.result;
-      errors?.forEach((item) => {
-        toast({
-          title: `Please edit ${item.field} field`,
-          description: item.message,
-        });
+    onError(error, variables, context) {
+      toast({
+        description: `Error`,
       });
     },
   });

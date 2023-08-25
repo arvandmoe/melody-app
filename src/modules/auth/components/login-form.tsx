@@ -57,7 +57,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     mutationFn: (dto: LoginDto) => AccountService.login(dto),
     onSuccess(data, variables, context) {
       Cookies.set("token", data?.data?.result.access_token);
-      router.push("/");
+      router.replace("/");
     },
     onError(error: AxiosError<RegisterError>, variables, context) {
       const errors = error?.response?.data.result;
